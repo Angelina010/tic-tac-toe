@@ -14,30 +14,9 @@ const gameboard = (function () {
     };
 
     const hasWon = function (marker) {
-        for (let row of board) {
-            let rowWin = true;
-            for (let i = 0; i < 3; i++) {
-                if (row[i] != marker) {
-                    rowWin = false;
-                    break;
-                }
-            }
-            if (rowWin) {
-                return true
-            }
-        }
-
-        for (let colNum = 0; colNum < 3; colNum++) {
-            let colWin = true;
-            for (let rowNum = 0; rowNum < 3; rowNum++) {
-                if (board[rowNum][colNum] !== marker) {
-                    colWin = false;
-                    break;
-                }
-            }
-            if (colWin) {
-                return true
-            }
+        for (let i = 0; i < 3; i++) {
+            if (board[i].every(cell => cell === marker)) return true; // Check row
+            if (board.every(row => row[i] === marker)) return true; // Check column
         }
 
         let leftDiaWin = true;
@@ -64,4 +43,5 @@ const gameboard = (function () {
 
     return { board, placeMarker, hasWon }
 })();
+
 
