@@ -44,4 +44,31 @@ const gameboard = (function () {
     return { board, placeMarker, hasWon }
 })();
 
+const cells = document.querySelectorAll(".cell");
+for (let i = 0; i < 9; i++){
+    cells[i].setAttribute("data-index", i);
+}
+
+function playGame(){
+    let currMarker = "X"
+    cells.forEach(cell => {
+        cell.addEventListener("click", (event) => {
+            const index = event.target.getAttribute("data-index");
+            const row = Math.floor(index / 3);
+            const col = index % 3;
+    
+            gameboard.placeMarker(currMarker, row, col);
+            if (gameboard.hasWon(currMarker)){
+                console.log(currMarker + " wins!");
+            }
+            event.target.textContent = currMarker;
+
+            currMarker = currMarker === "X" ? "O" : "X"
+        });
+    });
+}
+
+playGame();
+
+
 
