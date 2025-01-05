@@ -1,12 +1,27 @@
 const gameboard = (function () {
     const board = [];
-    for (let i = 0; i < 3; i++) {
-        let row = []
-        for (let j = 0; j < 3; j++) {
-            row.push("")
-        }
-        board.push(row)
-    };
+
+    let currMarker = "X";
+
+    const getMarker = () => {
+        return currMarker; 
+    }
+
+    const setMarker = (marker) => {
+        currMarker = marker;
+    }
+
+    const resetBoard = () => {board.length = 0; initalizeBoard();}
+
+    const initalizeBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            let row = []
+            for (let j = 0; j < 3; j++) {
+                row.push("")
+            }
+            board.push(row)
+        };
+    }
 
     const placeMarker = (marker, row, col) => {
         if (board[row][col] === "")
@@ -41,8 +56,10 @@ const gameboard = (function () {
         return false;
     }
 
-    return { board, placeMarker, hasWon }
+    return {resetBoard, getMarker, setMarker, placeMarker, hasWon }
 })();
+
+gameboard.resetBoard();
 
 const cells = document.querySelectorAll(".cell");
 for (let i = 0; i < 9; i++){
@@ -50,25 +67,36 @@ for (let i = 0; i < 9; i++){
 }
 
 function playGame(){
-    let currMarker = "X"
     cells.forEach(cell => {
         cell.addEventListener("click", (event) => {
             const index = event.target.getAttribute("data-index");
             const row = Math.floor(index / 3);
             const col = index % 3;
     
-            gameboard.placeMarker(currMarker, row, col);
-            if (gameboard.hasWon(currMarker)){
-                console.log(currMarker + " wins!");
+            gameboard.placeMarker(gameboard.getMarker(), row, col);
+            if (gameboard.hasWon(gameboard.getMarker())){
+                console.log(gameboard.getMarker() + " wins!");
             }
-            event.target.textContent = currMarker;
+            event.target.textContent = gameboard.getMarker();
 
-            currMarker = currMarker === "X" ? "O" : "X"
+            gameboard.setMarker(gameboard.getMarker() === "X" ? "O" : "X");
+
         });
     });
 }
 
 playGame();
+
+const resetButton = document.querySelector(".reset-btn")
+resetButton.addEventListener("click", resetGame);
+
+function resetGame(){
+    gameboard.resetBoard();
+    cells.forEach((cell) => {
+        cell.textContent = ""
+    })
+    gameboard.setMarker("X");
+}
 
 
 
